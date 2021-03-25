@@ -40,6 +40,17 @@ def color_transfer():
 
 		s = cv2.cvtColor(s,cv2.COLOR_LAB2BGR)
 		cv2.imwrite('result/r'+str(n+1)+'.bmp',s)
+		
+def color_transfer_new(sc, dc):
+   sc = cv2.cvtColor(sc, cv2.COLOR_BGR2LAB)
+   s_mean, s_std = get_mean_and_std(sc)
+   dc = cv2.cvtColor(dc, cv2.COLOR_BGR2LAB)
+   t_mean, t_std = get_mean_and_std(dc)
+   img_n=((sc-s_mean)*(t_std/s_std))+t_mean
+   np.putmask(img_n,img_n>255,255)
+   np.putmask(img_n,img_n<0,0)
+   dst = cv2.cvtColor(cv2.convertScaleAbs(img_n), cv2.COLOR_LAB2BGR)
+   return dst
 
 color_transfer()
 os.system("pause")
